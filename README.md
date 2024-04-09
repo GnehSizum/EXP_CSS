@@ -2,10 +2,11 @@
 
 College of Communication and Engineering, Jilin University
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-%  Author:  muzs, TheB.AI    
-%  Brief:   Communication System Simulation Experiment    
-%  Use:     MATLAB R2023a    
-%  Version: 0.1    
-%  Date:    2024.04.01    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%&emsp;Author :&ensp;&nbsp;muzs, TheB.AI, ChatGPT 3.5    
+%&emsp;Brief :&emsp;&ensp;&nbsp;Communication System Simulation Experiment    
+%&emsp;Use :&emsp;&ensp;&nbsp;&nbsp;MATLAB R2023a    
+%&emsp;Version :&ensp;0.2    
+%&emsp;Date :&emsp;&ensp;&nbsp;2024.04.01 ~ 2024.04.09    
+%&emsp;Note :&emsp;&ensp;&nbsp;Experiment 6 used MATLAB APP Designer instead of GUIDE.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
