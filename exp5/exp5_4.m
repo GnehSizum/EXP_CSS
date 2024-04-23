@@ -1,0 +1,21 @@
+n=0:1:15;
+figure;
+x1n=sin(2*pi*0.125*n)+cos(2*pi*(0.125+1/16)*n);
+xk1=fft(x1n);xk1=abs(xk1);
+subplot(1,2,1);stem(n,xk1);
+xlabel('n');ylabel('X(n)');title('∆f = 1/16');
+x2n=sin(2*pi*0.125*n)+cos(2*pi*(0.125+1/64)*n);
+xk2=fft(x2n);xk2=abs(xk2);
+subplot(1,2,2);stem(n,xk2);
+xlabel('n');ylabel('X(n)');title('∆f = 1/64');
+
+n=0:1:127;
+figure;
+x1n=sin(2*pi*0.125*n)+cos(2*pi*(0.125+1/16)*n);
+xk1=fft(x1n);xk1=abs(xk1);
+subplot(1,2,1);stem(n,xk1);
+xlabel('n');ylabel('X(n)');title('∆f = 1/16');
+x2n=sin(2*pi*0.125*n)+cos(2*pi*(0.125+1/64)*n);
+xk2=fft(x2n);xk2=abs(xk2);
+subplot(1,2,2);stem(n,xk2);
+xlabel('n');ylabel('X(n)');title('∆f = 1/64');
