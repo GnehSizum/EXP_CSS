@@ -1,63 +1,78 @@
-clc;clear;
-xcn=[1 2 3 4 4 3 2 1];
-xen=rand(1,512);
-qqqqq=conv(xcn,xen);
+% 产生512点的随机序列Xe(n)
+Xe = randn(1, 512);
 
-figure;
-stem([0:1:518],qqqqq);xlabel('n');ylabel('幅度');
-axis([0 520 0 16]);
-
-N1=length(xcn);N2=length(xen)/8;
-xcn=[xcn zeros(1,N2-1)];
-xck=fft(xcn);
-
-for i=1:1:8
-    xenii=xeni(N2,xen,i-1);
-    xenii=[xenii zeros(1,N1-1)];
-    xeki=fft(xenii);
-    yki=xck.*xeki;
-    yni=ifft(yki);
-    y(i,:)=yni;
-end
-
-for i=0:1:7
-    for j=0:1:i*N2-1
-        ynii(i+1,[0+1:1:i*N2-1+1])=0;
-    end
-    for j=i*N2:1:N1+(i+1)*N2-2
-        ynii(i+1,[i*N2+1:1:N1+(i+1)*N2-2+1])=y(i+1,:);
-    end
-    for j=N1+(i+1)*N2-1:1:N1+8*N2-2
-        ynii(i+1,[N1+(i+1)*N2-1+1:1:N1+8*N2-2+1])=0;
+% 定义Xc(n)三角波序列
+Xc = zeros(1, 8);
+for n = 0:7
+    if n >= 0 && n <= 3
+        Xc(n+1) = n + 1;
+    elseif n >= 4 && n <= 7
+        Xc(n+1) = 8 - n;
     end
 end
 
-yn=zeros(1,N1+8*N2-1);
+% 线性卷积
+Y_overlap_add = overlap_add(Xe, Xc, 8);
+Y_overlap_save = overlap_save(Xe, Xc, 8);
 
-for i=1:1:8
-    yn=yn+ynii(i,:);
-end
-
-n=0:1:N1+8*N2-2;
+% Xe(n)的幅频特性
 figure;
-stem(n,yn);xlabel('n');ylabel('幅度');title('重叠相加法');
-axis([0 520 0 16]);
+plot(abs(fft(Xe, 512)));
+title('Xe(n)的幅频特性');
+xlabel('频率');
+ylabel('幅度');
 
-xen21=shiftmm(N1-1,xen);
-for i=1:1:8
-    xen2i(i,:)=xenni(N1,N2,xen21,i-1);
-end
-
-for i=1:1:8
-    xek2i=fft(xen2i(i,:));
-    yk2i=xck.*xek2i;
-    yn2i=ifft(yk2i);
-    y2(i,:)=yn2i;
-end
-
-y2(:,1:N1-1)=[;;;;;;;;];
-n2=0:1:8*N2-1;
+% Xc(n)的幅频特性
 figure;
-stem(n2,[y2(1,:) y2(2,:) y2(3,:) y2(4,:) y2(5,:) y2(6,:) y2(7,:) y2(8,:)]);
-xlabel('n');ylabel('幅度');title('重叠保留法');
-axis([0 520 0 16]);
+plot(abs(fft(Xc, 512)));
+title('Xc(n)的幅频特性');
+xlabel('频率');
+ylabel('幅度');
+
+% 重叠相加法卷积后Xe(n)的幅频特性
+figure;
+plot(abs(fft(Y_overlap_add, 512)));
+title('重叠相加法卷积后Xe(n)的幅频特性');
+xlabel('频率');
+ylabel('幅度');
+
+% 重叠保留法卷积后Xe(n)的幅频特性
+figure;
+plot(abs(fft(Y_overlap_save, 512)));
+title('重叠保留法卷积后Xe(n)的幅频特性');
+xlabel('频率');
+ylabel('幅度');
+
+% 重叠相加法函数
+function Y = overlap_add(X, H, L)
+    M = length(X);
+    N = length(H);
+    P = L + N - 1;
+    H = [H zeros(1, P - N)]; % 补零至P长度
+    L_H = P - L + 1; % H的长度
+    Y = zeros(1, M + N - 1); % 初始化输出序列
+
+    % 分段卷积
+    for i = 1:L:M
+        x = [X(i:min(i+L-1, M)) zeros(1, P-L)]; % 补零至P长度
+        y = ifft(fft(x) .* fft(H)); % 卷积
+        Y(i:i+P-1) = Y(i:i+P-1) + y(1:P); % 相加
+    end
+end
+
+% 重叠保留法函数
+function Y = overlap_save(X, H, L)
+    M = length(X);
+    N = length(H);
+    P = L + N - 1;
+    H = [H zeros(1, P - N)]; % 补零至P长度
+    L_H = P - L + 1; % H的长度
+    Y = zeros(1, M + N - 1); % 初始化输出序列
+
+    % 分段卷积
+    for i = 1:L:M
+        x = [X(i:min(i+L-1, M)) zeros(1, P-L)]; % 补零至P长度
+        y = ifft(fft(x) .* fft(H)); % 卷积
+        Y(i+L-1:i+P-1) = y(L:P); % 保留重叠部分
+    end
+end
